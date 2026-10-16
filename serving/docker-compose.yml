@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  vllm-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vllm-finetune-pipeline/vllm-server:latest
+    container_name: vllm-tool-sql-server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the merged 16-bit weights produced by fine_tuning/train.py
+      - ../fine_tuning/outputs:/models:ro
+      # Persist the HF/vLLM cache across restarts
+      - vllm-cache:/root/.cache/huggingface
+    environment:
+      - MODEL_PATH=/models/merged_16bit
+      - MAX_MODEL_LEN=4096
+      - GPU_MEMORY_UTILIZATION=0.90
+      - TENSOR_PARALLEL_SIZE=1
+      - VLLM_WORKER_MULTIPROC_METHOD=spawn
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # Equivalent for plain `docker run` / non-Swarm docker-compose:
+    #   --gpus all
+    ipc: host
+    shm_size: "8gb"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  vllm-cache:

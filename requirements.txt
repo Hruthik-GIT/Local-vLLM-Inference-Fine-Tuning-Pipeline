@@ -1,0 +1,27 @@
+# ---- Fine-tuning ----
+unsloth[cu121-torch240] @ git+https://github.com/unslothai/unsloth.git
+torch>=2.4.0
+triton>=3.0.0
+transformers>=4.44.0
+datasets>=2.20.0
+trl>=0.9.6
+peft>=0.12.0
+accelerate>=0.33.0
+bitsandbytes>=0.43.1
+xformers>=0.0.27
+sentencepiece
+protobuf
+
+# ---- Serving (installed inside the serving/Dockerfile, listed here for reference) ----
+vllm>=0.6.0
+
+# ---- Benchmarking ----
+locust>=2.29.0
+httpx>=0.27.0
+numpy>=1.26.0
+pandas>=2.2.0
+matplotlib>=3.9.0
+
+# ---- Utility ----
+python-dotenv>=1.0.0
+pynvml>=11.5.0

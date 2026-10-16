@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+
+fine_tuning/outputs/
+benchmarks/results/
+
+*.gguf
+*.safetensors
+*.bin
+
+.env
+.DS_Store
